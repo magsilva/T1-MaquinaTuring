@@ -25,10 +25,15 @@ class turing_machine:
     def execute(self):
         for transition in self.transitions:
             print("resultado de tape_list")
-            print(self.tape_list)
-            head = self.tape_list[0].position
-            if self.current_state == transition[0] and self.tape_list[0].content[head] == transition[2]:
+            print(self.tape_list[0].content)
+            head = int(self.tape_list[0].position)
+            print(self.tape_list[0].content)
+            print(transition[2])
+            print("head = " + str(head))
+            if int(self.current_state) == int(transition[0]) and self.tape_list[0].content[head] == transition[2]:
                 self.current_state = transition[1]
+                print("maoi")
+                print(transition[3])
                 self.tape_list[0].content[head] = transition[3]
                 if transition[4] == 'L':
                     self.tape_list[0].move_left()

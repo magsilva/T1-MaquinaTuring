@@ -31,9 +31,9 @@ if __name__ == "__main__":
         transitions.append(lines[i].split())
 
     number_of_args = 2 + int(number_of_tapes)
-    tape_list = tape(['a'], 'B')
+    tape_list = tape(['a'], 'B', [])
     for i in range(2, number_of_args):
-        tape_list.content.append(sys.argv[i].split())
+        tape_list.content = (sys.argv[i].split())
 
     tm = turing_machine(states, final_states, initial_state, transitions, whitespace, [tape_list])
 
