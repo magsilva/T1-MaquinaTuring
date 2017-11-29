@@ -1,5 +1,7 @@
 from turing_machine import turing_machine
 import sys
+from tape import tape
+
 
 if __name__ == "__main__":
     fp = open(sys.argv[1], "r")
@@ -29,9 +31,11 @@ if __name__ == "__main__":
         transitions.append(lines[i].split())
 
     number_of_args = 2 + int(number_of_tapes)
-    tape_list = []
+    tape_list = tape(['a'], 'B')
     for i in range(2, number_of_args):
-        tape_list.append(sys.argv(i).split())
-        print(tape_list(i))
+        tape_list.content.append(sys.argv[i].split())
 
-    tm = turing_machine(states, final_states, initial_state, transitions, whitespace)
+    tm = turing_machine(states, final_states, initial_state, transitions, whitespace, [tape_list])
+
+    tm.run()
+    print(tm.tape_list[0].content)
