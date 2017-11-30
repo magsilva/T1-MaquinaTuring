@@ -19,10 +19,10 @@ class turing_machine:
             self.tape_list[tape_number].move_right()
 
     def run(self):
-        while self.execute():
+        while self.step():
             print("")
 
-    def execute(self):
+    def step(self):
         for transition in self.transitions:
             print("resultado de tape_list")
             print(self.tape_list[0].content)
