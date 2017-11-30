@@ -33,9 +33,10 @@ if __name__ == "__main__":
     number_of_args = 2 + int(number_of_tapes)
     tape_list = tape(['a'], 'B', [])
     for i in range(2, number_of_args):
-        tape_list.content = (sys.argv[i].split())
+        tape_list.content = list(sys.argv[i])
 
     tm = turing_machine(states, final_states, initial_state, transitions, whitespace, [tape_list])
 
     tm.run()
     print(tm.tape_list[0].content)
+    print(tm.current_state == tm.final_states[0])
