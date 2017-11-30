@@ -11,7 +11,6 @@ class tape:
             self.position -= 1
         else:
             self.content.insert(0,self.whitespace_symbol)
-            '''self.content = self.whitespace_symbol + self.content'''
 
     def move_right(self):
         if self.position < len(self.content):

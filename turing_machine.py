@@ -23,21 +23,19 @@ class turing_machine:
     def run(self):
         self.tape_list[0].size = len(self.tape_list[0].content)
         while self.step():
-            print("")
+            ''' just a empty while function that executes turing machine's steps'''
+
 
     def getElementAtPosition(self, position, tapeElement):
 
         if position >= 0 and position < tapeElement.size:
-            print("caiu aqui 1")
             return tapeElement.content[position]
         elif  position < 0:
-            print("caiu aqui 2")
             tapeElement.size += 1
              
             tapeElement.content.insert(0,self.whitespace)
 
         else:
-            print("caiu aqui 3")
             tapeElement.size += 1
             tapeElement.content.append(self.whitespace)
         return self.whitespace
@@ -45,18 +43,12 @@ class turing_machine:
 
     def step(self):
         for transition in self.transitions:
-            print("resultado de tape_list")
-            print(self.tape_list[0].content)
             head = int(self.tape_list[0].position)
-            print("head")
-            print(head)
  
             if int(self.current_state) == int(transition[0]) and self.getElementAtPosition(head, self.tape_list[0]) == transition[2]:
                
                 self.tape_list[0].content[head] = transition[3]
                 self.current_state = transition[1]
-                '''self.getElementAtPosition(head, self.tape_list[0]) == transition[3]'''
-                print(transition[4])
                 self.move_head(0,transition[4])
                
                   
