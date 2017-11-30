@@ -5,11 +5,18 @@ from tape import tape
 
 if __name__ == "__main__":
     fp = open(sys.argv[1], "r")
-    lines = fp.readlines()
+    lines_cmd = fp.readlines()
+    lines = []
+    for line in lines_cmd:
+        lines.append(line.replace('\n',''))
+
     input_alphabet = lines[0].split()
     print("input_alphabet")
     print(input_alphabet)
-    whitespace = lines[2]
+    tape_alphabet = lines[1]
+    whitespace = lines[2].replace('\n','')
+    print("whitespace no main")
+    print(whitespace)
     states = lines[3].split()
     print("states")
     print(states)
@@ -31,7 +38,7 @@ if __name__ == "__main__":
         transitions.append(lines[i].split())
 
     number_of_args = 2 + int(number_of_tapes)
-    tape_list = tape(['a'], 'B', [])
+    tape_list = tape(whitespace, tape_alphabet, [])
     for i in range(2, number_of_args):
         tape_list.content = list(sys.argv[i])
 
