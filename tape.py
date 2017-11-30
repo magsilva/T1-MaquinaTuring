@@ -1,7 +1,7 @@
 class tape:
     def __init__(self, whitespace, tape_alphabet, content=[]):
         self.position = 0
-        self.whitespace_symbol = [whitespace]
+        self.whitespace_symbol = whitespace
         self.alphabet = tape_alphabet
         self.content = content
         self.size = len(content)

@@ -30,4 +30,8 @@ if __name__ == "__main__":
     tm = turing_machine(states, final_states, initial_state, transitions, whitespace, [tape_list])
 
     tm.run()
-    print(tm.current_state == tm.final_states[0])
+    for state in tm.final_states:
+        if tm.current_state == state:
+            print(True)
+            exit(0)
+    print(False)
