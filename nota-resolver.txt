@@ -1,0 +1,5 @@
+####### NOTA PARA RESOLUÇÃO DE FALHA ###########
+→ O conteúdo da fita deve ser estendido além da entrada, pois alguns algoritmos usam
+os espaços em branco para a realização do processamento. Então é necessário
+que a fita possua extremidades brancas e que possam ser expandidas.
+
