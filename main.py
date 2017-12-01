@@ -23,13 +23,18 @@ if __name__ == "__main__":
         transitions.append(lines[i].split())
 
     number_of_args = 2 + int(number_of_tapes)
-    tape_list = tape(whitespace, tape_alphabet, [])
+    tape_list = []
+    temp = []
     for i in range(2, number_of_args):
-        tape_list.content = list(sys.argv[i])
+        if len(sys.argv) >= i+1:
+            tape_list.append(tape(whitespace, tape_alphabet, list(sys.argv[i])))
+        else:
+            tape_list.append(tape(whitespace,tape_alphabet,[whitespace]))
 
-    tm = turing_machine(states, final_states, initial_state, transitions, whitespace, [tape_list])
+    tm = turing_machine(states, final_states, initial_state, transitions, whitespace, tape_list)
 
     tm.run()
+    
     for state in tm.final_states:
         if tm.current_state == state:
             print(True)
