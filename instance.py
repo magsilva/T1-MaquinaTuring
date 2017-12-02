@@ -38,7 +38,5 @@ class instance:
 
                 if validTapeTransitions == len(self.tape_list):
                     validTransitions.append(transition)
-        if len(validTransitions) >= 1:
-            self.doTransition(validTransitions[0])
-            return validTransitions
-        return []
+
+        return validTransitions

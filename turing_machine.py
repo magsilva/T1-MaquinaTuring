@@ -21,7 +21,8 @@ class turing_machine:
                 stepResult = instance.step(self.transitions)   
                 if len(stepResult) == 0:
                     self.instances.remove(instance)
-                elif len(stepResult) >= 2:
+                elif len(stepResult) >= 1:
+                    instance.doTransition(stepResult[0])
                     del stepResult[0]
                     for result in stepResult:
                         self.instances.append(copy.deepcopy(instance)) 
