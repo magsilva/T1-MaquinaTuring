@@ -1,4 +1,4 @@
-from turing_machine import turing_machine
+from non_deterministic_turing_machine import non_deterministic_turing_machine
 import sys
 from tape import tape
 
@@ -31,12 +31,7 @@ if __name__ == "__main__":
         else:
             tape_list.append(tape(whitespace,tape_alphabet,[whitespace]))
 
-    tm = turing_machine(states, final_states, initial_state, transitions, whitespace, tape_list)
+    tm = non_deterministic_turing_machine(states, final_states, initial_state, transitions, whitespace, tape_list)
 
     tm.run()
-    
-    for state in tm.final_states:
-        if tm.current_state == state:
-            print(True)
-            exit(0)
     print(False)

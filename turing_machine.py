@@ -12,19 +12,26 @@ class turing_machine:
         self.whitespace = whitespace_symbol
         self.current_state = first_state
 
-
-    def run(self):
+    def doTransition(self,transition):
+        self.current_state = transition[1]
+        tapeIndex = 1
         for tape in self.tape_list:
-            tape.size = len(tape.content)
-        while self.step():
-            ''' just a empty while function that executes turing machine's steps'''
+            tape.set_content(transition[3*(tapeIndex)])
+            tape.move_head(transition[(3*tapeIndex)+1])
+            tapeIndex += 1
+        for final_state in self.final_states:
+            if self.current_state == final_state:
+                print(True)
+                exit(0)
+        return 0
 
     def step(self):
+        validTransitions = []
         for transition in self.transitions:
             if int(self.current_state) == int(transition[0]):
+
                 validTapeTransitions = 0
                 tapeIndex = 1
-
                 for tape in self.tape_list:
                     if tape.get_content() == transition[(3*tapeIndex)-1]:
                         validTapeTransitions += 1
@@ -33,11 +40,8 @@ class turing_machine:
                     tapeIndex +=1
 
                 if validTapeTransitions == len(self.tape_list):
-                    self.current_state = transition[1]
-                    tapeIndex = 1
-                    for tape in self.tape_list:
-                        tape.set_content(transition[3*(tapeIndex)])
-                        tape.move_head(transition[(3*tapeIndex)+1])
-                        tapeIndex += 1
-                    return 1
-        return 0
+                    validTransitions.append(transition)
+        if len(validTransitions) >= 1:
+            self.doTransition(validTransitions[0])
+            return validTransitions
+        return []
