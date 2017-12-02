@@ -1,47 +1,29 @@
-from tape import tape
+from instance  import instance
+import copy
 
 class turing_machine:
+    def __init__(self,states, final_states, initial_state, transitions, whitespace, tape_list):
+        self.instances = [instance(initial_state, final_states, tape_list)]
+        self.final_states = final_states
+        self.states = states
+        self.initial_state = initial_state
+        self.final_states = final_states
+        self.transitions = transitions
+        self.whitespace = whitespace
 
-    """A class to represent a turing machine."""
-    def __init__(self, state_list, final_state_list, first_state, transition_list, whitespace_symbol, tape_list=[]):
-        self.tape_list = tape_list
-        self.states = state_list
-        self.initial_state = first_state
-        self.final_states = final_state_list
-        self.transitions = transition_list
-        self.whitespace = whitespace_symbol
-        self.current_state = first_state
+    def run(self):
+        for tape in self.instances[0].tape_list:
+            tape.size = len(tape.content)
 
-    def doTransition(self,transition):
-        self.current_state = transition[1]
-        tapeIndex = 1
-        for tape in self.tape_list:
-            tape.set_content(transition[3*(tapeIndex)])
-            tape.move_head(transition[(3*tapeIndex)+1])
-            tapeIndex += 1
-        for final_state in self.final_states:
-            if self.current_state == final_state:
-                print(True)
-                exit(0)
-        return 0
-
-    def step(self):
-        validTransitions = []
-        for transition in self.transitions:
-            if int(self.current_state) == int(transition[0]):
-
-                validTapeTransitions = 0
-                tapeIndex = 1
-                for tape in self.tape_list:
-                    if tape.get_content() == transition[(3*tapeIndex)-1]:
-                        validTapeTransitions += 1
-                    else:
-                        break
-                    tapeIndex +=1
-
-                if validTapeTransitions == len(self.tape_list):
-                    validTransitions.append(transition)
-        if len(validTransitions) >= 1:
-            self.doTransition(validTransitions[0])
-            return validTransitions
-        return []
+        while self.instances:
+            instances = self.instances
+            for instance in instances:
+                stepResult = instance.step(self.transitions)   
+                if len(stepResult) == 0:
+                    self.instances.remove(instance)
+                elif len(stepResult) >= 2:
+                    del stepResult[0]
+                    for result in stepResult:
+                        self.instances.append(copy.deepcopy(instance)) 
+                        self.instances[-1].doTransition(result)
+        print(False)
