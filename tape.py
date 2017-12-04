@@ -1,9 +1,9 @@
 '''Classe que representa uma unidade de fita da turing machine'''
 class tape:
     '''
-        @param_1: espaco em branco
-        @param_2: alfabeto da fita
-        @param_3: conteudo da fita
+        @param whitespace: espaco em branco
+        @param tape_alphabet: alfabeto da fita, do tipo lista
+        @param content: conteudo da fita, do tipo lista
     '''
     def __init__(self, whitespace, tape_alphabet, content=[]):
         self.position = 0 # posicao atual da fita
@@ -13,7 +13,8 @@ class tape:
         self.size = len(content) # tamanho da fita
 
     '''
-        @param: movimento da fita → pode ser para esquerda (L) ou para direita (R)
+        @func move_head: tem por finalidade prover as movimentações para a fita
+        @param movement: movimento da fita → pode ser para esquerda (L) ou para direita (R)
     '''
     def move_head(self, movement):
         if movement == 'L': 
@@ -22,7 +23,7 @@ class tape:
             self.move_right()
 
     '''
-        movimenta a posicao da fita para esquerda
+        @fun move_left: tem por finalidade mover a posição da fita para a esquerda
     '''
     def move_left(self):
         if self.position > 0: # se existir espaco pra esquerda, vai para a esquerda
@@ -32,7 +33,7 @@ class tape:
 
 
     '''
-        movimenta a posicao da fita para a direita
+        @func move_right: movimenta a posição da fita para a direita
     '''
     def move_right(self): 
         if self.position < len(self.content)-1: # se tiver posicao para a direita, vai para a direita
@@ -43,13 +44,13 @@ class tape:
             self.position += 1
 
     '''
-        retorna o conteudo da posicao atual da fita
+        @func get_content: retorna o conteúdo da posição atual da fita
     '''
     def get_content(self):
         return self.content[self.position]
 
     '''
-        modifica o conteudo da posicao atual da fita
+        @func set_content: modifica o conteúdo da posiçãoo atual da fita
     '''    
     def set_content(self, symbol):
         self.content[self.position] = symbol 
