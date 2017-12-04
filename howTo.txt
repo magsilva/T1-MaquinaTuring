@@ -1,7 +1,0 @@
-Para executar a máquina de turing, é necessário rodas a linha de comando:
-
-python3 main.py arquivo.txt  conteudo_fita_1 [conteudo_fita_2] ... [conteudo_fita_n] 
-
-
-arquivo.txt: arquivo de texto que define uma maquina de turing (saida do programa do professor)
-conteudo_da_fita: sequencia de caracteres de entrada
