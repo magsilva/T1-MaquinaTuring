@@ -34,12 +34,6 @@ if __name__ == "__main__":
             tape_list.append(tape(whitespace,tape_alphabet,[whitespace]))
 
     '''Instancia a turing machine'''
-    # @param_1: lista de estados
-    # @param_2: lista de estados de aceitacao
-    # @param_3: estado inicial
-    # @param_4: lista de transicoes
-    # @param_5: simbolo que representa o branco
-    # @param_6: lista de fitas da turing machine
     
     tm = turing_machine(states, final_states, initial_state, transitions, whitespace, tape_list)
 

@@ -1,6 +1,7 @@
-'''Classe que representa uma unidade de fita da turing machine'''
+'''@mod tape: móduloe que representa uma unidade de fita da turing machine'''
 class tape:
     '''
+        @const: construtor do módulo que representa a classe tape (fita)
         @param whitespace: espaco em branco
         @param tape_alphabet: alfabeto da fita, do tipo lista
         @param content: conteudo da fita, do tipo lista
@@ -23,7 +24,7 @@ class tape:
             self.move_right()
 
     '''
-        @fun move_left: tem por finalidade mover a posição da fita para a esquerda
+        @func move_left: tem por finalidade mover a posição da fita para a esquerda
     '''
     def move_left(self):
         if self.position > 0: # se existir espaco pra esquerda, vai para a esquerda

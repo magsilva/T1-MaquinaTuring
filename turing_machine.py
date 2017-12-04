@@ -1,11 +1,20 @@
 from instance  import instance
 import copy
-''' classe que representa uma turing machine '''
+''' @mod turing_machine: módulo que representa uma turing machine '''
 class turing_machine:
+    '''
+        @const: construtor do módulo (classe) turing machine
+        @param states: lista de estados
+        @param final_states: lista de estados de aceitacao
+        @param initial_state: estado inicial
+        @param transitions: lista de transicoes
+        @param whitespace: simbolo que representa o branco
+        @param tape_list: lista de fitas da turing machine
+    '''
     def __init__(self,states, final_states, initial_state, transitions, whitespace, tape_list):
         '''
-            self.instances: é uma lista de instancias de turing machine, que é iniciada com apenas 
-            uma instancia que usa os estados de aceitacao e a lista de fitas da entrada
+            @var self.instances: é uma lista de instâncias de turing machine, que é iniciada com apenas 
+            uma instância que usa os estados de aceitação e a lista de fitas da entrada
         '''
         self.instances = [instance(initial_state, final_states, tape_list)]
         self.final_states = final_states
@@ -17,31 +26,31 @@ class turing_machine:
     
     
     '''
-        Executa toda a computacao necessaria para turing machine ser processada
+        @func run: Executa toda a computação necessária para máquina de turing ser processada
     '''
     def run(self):
         # inicia o tamanho das fitas da primeira instancia de acordo com seus conteudos
         for tape in self.instances[0].tape_list:
             tape.size = len(tape.content)
 
-        '''
-            Laco de repeticao que executa enquanto existir instancias de maquina de turing
-        '''
+        
+        # Laço de repeticao que executa enquanto existir instancias de maquina de turing
+        
         while self.instances:
             instances = self.instances # para nao iterar em uma lista que tem possibilidade de nao modificacao
-            # iterar sobre a lista de instancias
+            # iterar sobre a lista de instâncias
             for instance in instances:
-                # stepResult recebe a lista de transicoes validas
+                # stepResult recebe a lista de transições válidas
                 stepResult = instance.step(self.transitions)   
-                # verifica se nao tem transicao valida
+                # verifica se não tem transição válida
                 if len(stepResult) == 0:
                     self.instances.remove(instance)
                 else:
-                # realiza a primeira transicao na instancia que esta iterando
+                # realiza a primeira transição na instância que esta iterando
                     instance.doTransition(stepResult[0])
-                # deleta a transicao executada
+                # deleta a transição executada
                     del stepResult[0]
-                # realiza copias da instancia e executa as transicoes restantes nelas    
+                # realiza cópias da instância e executa as transições restantes nelas    
                     for result in stepResult:
                         self.instances.append(copy.deepcopy(instance)) 
                         self.instances[-1].doTransition(result)
