@@ -2,33 +2,33 @@
 # -*- coding: utf-8 -*-
 
 from tape import tape
+import copy
 
 
 ''' @mod instance: módulo que representa uma instância'''
 class instance:
 
     """@const: construtor do módulo instance que representa uma instância"""
-    def __init__(self,first_state,final_states, tape_list=[]):
-        self.tape_list = tape_list
+    def __init__(self, first_state, tape_list=[]):
         self.current_state = first_state
-        self.final_states = final_states
+        self.tape_list = copy.deepcopy(tape_list)
         
     '''
         @func doTransision: realiza uma transição
         @param transition: transição a ser executada pela instância
     '''
     def doTransition(self, transition):
-        self.current_state = transition[1]
-        # usado para acessar o símbolo da transição para aquela fita
-        tapeIndex = 0
-
+        newinstance = instance(transition[1], self.tape_list)
         # executa a transição para todas as fitas da instância
-        for tape in self.tape_list:
+        tapeIndex = 0
+        for tape in newinstance.tape_list:
             # modifica o conteúdo da posição atual da fita
-            tape.set_content(transition[3 + (4*tapeIndex)])
+            tape.set_content(transition[3 + (4 * tapeIndex)])
             # move a cabeça da fita 
-            tape.move_head(transition[4 + (4*tapeIndex)])
+            tape.move_head(transition[4 + (4 * tapeIndex)])
             tapeIndex += 1
+
+        return newinstance
 
 
     '''
@@ -54,8 +54,8 @@ class instance:
                     tapeIndex += 1
 
                 # verifica se o número de fitas que aceitam a transicao seja igual a quantidade de fitas
-                if validTapeTransitions == len(self.tape_list):
                 # é adicionado a lista de transições válidas
+                if validTapeTransitions == len(self.tape_list):
                     validTransitions.append(transition)
 
         return validTransitions
@@ -65,5 +65,6 @@ class instance:
         for tape in self.tape_list:
             result += str(tape)
             result += ","
-        result += "]"
+        result += "]@S"
+        result += self.current_state
         return result

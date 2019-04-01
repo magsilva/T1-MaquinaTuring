@@ -1,4 +1,0 @@
-Nome: Paulo Batista da Costa -- RA: 1509764
-Nome: Venancius Lenz Michelan -- RA: 1816489
-
-Para acessar a documentacao, va na pagina: http://www.paulobatista.ml/turing_machine

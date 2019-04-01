@@ -68,5 +68,9 @@ class tape:
             self.content[self.position] = symbol 
 
     def __str__(self):
-        return str(self.content)
+        result = "(";
+        result += str(self.content)
+        result += ")@"
+        result += str(self.position)
+        return result
 
