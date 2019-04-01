@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 '''@mod tape: móduloe que representa uma unidade de fita da turing machine'''
-class tape:
+class Tape:
     '''
         @const: construtor do módulo que representa a classe tape (fita)
         @param whitespace: espaco em branco
@@ -14,7 +14,6 @@ class tape:
         self.whitespace_symbol = whitespace
         self.alphabet = tape_alphabet
         self.content = content
-        self.size = len(content) # tamanho da fita
 
     '''
         @func move_head: tem por finalidade prover as movimentações para a fita
@@ -34,7 +33,7 @@ class tape:
     def move_left(self):
         if self.position > 0: # se existir espaco pra esquerda, vai para a esquerda
             self.position -= 1
-        else: # se nao, coloca um branco no comeco da fita
+        else: # se nao, coloca um branco no comeco da fita (e mantém a posição 0)
             self.content.insert(0,self.whitespace_symbol)
 
 
@@ -59,7 +58,7 @@ class tape:
              return self.content[self.position]
 
     '''
-        @func set_content: modifica o conteúdo da posiçãoo atual da fita
+        @func set_content: modifica o conteúdo da posição atual da fita
     '''    
     def set_content(self, symbol):
         if len(self.content) == 0:
@@ -73,4 +72,3 @@ class tape:
         result += ")@"
         result += str(self.position)
         return result
-

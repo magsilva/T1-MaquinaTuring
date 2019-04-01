@@ -20,7 +20,6 @@ class turing_machine:
             uma instância que usa os estados de aceitação e a lista de fitas da entrada
         '''
         self.instances = [instance(initial_state, tape_list)]
-        self.final_states = final_states
         self.states = states
         self.initial_state = initial_state
         self.final_states = final_states

@@ -32,9 +32,9 @@ if __name__ == "__main__":
     '''laco de repeticao que construira a lista de fitas'''
     for i in range(2, number_of_args):
         if len(sys.argv) >= i + 1: # caso tenha simbolos, ele coloca na fita
-            tape_list.append(tape(whitespace, tape_alphabet, list(sys.argv[i])))
+            tape_list.append(Tape(whitespace, tape_alphabet, list(sys.argv[i])))
         else: # caso nao tenha, coloca simbolos que representam o branco
-            tape_list.append(tape(whitespace,tape_alphabet,[whitespace]))
+            tape_list.append(Tape(whitespace,tape_alphabet,[whitespace]))
 
     '''Instancia a turing machine'''
     tm = turing_machine(states, final_states, initial_state, transitions, whitespace, tape_list)
