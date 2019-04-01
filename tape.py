@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 '''@mod tape: móduloe que representa uma unidade de fita da turing machine'''
 class tape:
     '''
@@ -22,6 +25,8 @@ class tape:
             self.move_left()
         elif movement == 'R':
             self.move_right()
+        elif movement == 'S':
+            pass
 
     '''
         @func move_left: tem por finalidade mover a posição da fita para a esquerda
@@ -48,10 +53,20 @@ class tape:
         @func get_content: retorna o conteúdo da posição atual da fita
     '''
     def get_content(self):
-        return self.content[self.position]
+        if len(self.content) == 0:
+             return self.whitespace_symbol
+        else:
+             return self.content[self.position]
 
     '''
         @func set_content: modifica o conteúdo da posiçãoo atual da fita
     '''    
     def set_content(self, symbol):
-        self.content[self.position] = symbol 
+        if len(self.content) == 0:
+            self.content.append(symbol)
+        else:
+            self.content[self.position] = symbol 
+
+    def __str__(self):
+        return str(self.content)
+
