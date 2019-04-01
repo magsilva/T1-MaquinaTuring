@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from turing_machine import turing_machine # representa a turing machine
 from tape import tape # representa uma unidade de fita
 import sys
@@ -8,7 +11,7 @@ if __name__ == "__main__":
     lines_cmd = fp.readlines()
     lines = []
     for line in lines_cmd:
-        lines.append(line.replace('\n',''))
+        lines.append(line.rstrip())
     number_of_lines  = len(lines)
     '''valores de entrada que representam a turing machine de entrada'''
     input_alphabet   = lines[0].split()
@@ -28,14 +31,19 @@ if __name__ == "__main__":
     number_of_args = 2 + int(number_of_tapes)
     '''laco de repeticao que construira a lista de fitas'''
     for i in range(2, number_of_args):
-        if len(sys.argv) >= i+1: # caso tenha simbolos, ele coloca na fita
+        if len(sys.argv) >= i + 1: # caso tenha simbolos, ele coloca na fita
             tape_list.append(tape(whitespace, tape_alphabet, list(sys.argv[i])))
         else: # caso nao tenha, coloca simbolos que representam o branco
             tape_list.append(tape(whitespace,tape_alphabet,[whitespace]))
 
     '''Instancia a turing machine'''
-    
     tm = turing_machine(states, final_states, initial_state, transitions, whitespace, tape_list)
 
     '''executa a turing machine'''
-    tm.run()
+    result = tm.run()
+    if result[0] == 1:
+        print("Aceitou")
+    else:
+        print("Rejeitou")
+    print(result[1])
+
