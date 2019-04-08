@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import copy
+from transition import Transition
 from __builtin__ import True, False
-from future.backports.test.pystone import FALSE
+
 
 
 ''' @mod instance: módulo que representa uma instância'''

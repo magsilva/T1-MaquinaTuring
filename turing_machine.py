@@ -27,14 +27,13 @@ class TuringMachine:
         self.transitions = transitions
         self.whitespace = whitespace
         self.current_configurations = [Instance(self.initial_state, tapes)]
-
+ 
 
     def restart(self, tapes):
         self.current_configurations = [Instance(self.initial_state, tapes)]
 
 
     def verify_status(self, configuration):
-        print("Status", str(configuration))
         # Verifica aceitacao por estado final
         if configuration.acceptance_status != None:
             configuration.acceptance_status
@@ -81,7 +80,7 @@ class TuringMachine:
             for transition in valid_transitions:
                 new_configuration = configuration.apply_transition(transition)
                 self.current_configurations.append(new_configuration)
-                # print(str(configuration) + " -> " + str(new_configuration))
+#                print(str(configuration) + " -> " + str(new_configuration))
             
     '''
         @func run: Executa toda a computação necessária para máquina de turing ser processada
@@ -94,7 +93,7 @@ class TuringMachine:
                 self.verify_status(configuration)
                 if configuration.acceptance_status != None:
                     halted_configurations.append(configuration)
-                # print(str(configuration) + " (" + str(configuration.acceptance_status) + ")")
+#                print(str(configuration) + " (" + str(configuration.acceptance_status) + ")")
         self.current_configurations = halted_configurations
         if self.is_halted():
             return True

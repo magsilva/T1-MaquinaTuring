@@ -80,5 +80,13 @@ class Transition(object):
             new_tape_data.append([data.new_tape_symbol, data.direction])
         return new_tape_data
     
+    def __str__(self):
+        result = "[" + self.current_state + ", " + self.new_state
+        for tape_part in self.tape_data:
+            result += ", " + tape_part.current_tape_symbol
+            result += ", " + tape_part.new_tape_symbol
+            result += ", " + tape_part.direction
+        result += "]"
+        return result
         
         
