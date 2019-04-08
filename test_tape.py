@@ -37,27 +37,41 @@ def test_move_head_left():
     tape = Tape('B', ['a', 'b', 'X', 'B'], ['a', 'b'])
     tape.move_head('L')
     assert tape.get_content() == 'B'
+    assert tape.content == ['B', 'a', 'b']
+    assert tape.position == 0
 
 def test_move_head_right():
     tape = Tape('B', ['a', 'b', 'X', 'B'], ['a', 'b'])
     tape.move_head('R')
     assert tape.get_content() == 'b'
+    assert tape.content == ['a', 'b']
+    assert tape.position == 1
 
 def test_move_head_stay():
     tape = Tape('B', ['a', 'b', 'X', 'B'], ['a', 'b'])
     tape.move_head('S')
     assert tape.get_content() == 'a'
+    assert tape.content == ['a', 'b']
+    assert tape.position == 0
+
+def test_move_head_invalid_direction():
+    tape = Tape('B', ['a', 'b', 'X', 'B'], ['a', 'b'])
+    with pytest.raises(ValueError):
+        tape.move_head('T')
 
 def test_move_head_right_left():
     tape = Tape('B', ['a', 'b', 'X', 'B'], ['a', 'b'])
     tape.move_head('R')
     tape.move_head('L')
     assert tape.get_content() == 'a'
+    assert tape.position == 0
 
 def test_set_content_empty_tape():
     tape = Tape('B', ['a', 'b', 'X', 'B'], [])
     tape.set_content('a')
     assert tape.get_content() == 'a'
+    assert tape.content == ['a']
+    assert tape.position == 0
 
 def test_set_content_empty_tape_left_left_right():
     tape = Tape('B', ['a', 'b', 'X', 'B'], [])
@@ -67,6 +81,7 @@ def test_set_content_empty_tape_left_left_right():
     tape.set_content('a') 
     assert tape.get_content() == 'a'  
     assert tape.position == 1
+    assert tape.content == ['B', 'a']
 
 def test_set_string_empty_tape_left_left_right_a():
     tape = Tape('B', ['a', 'b', 'X', 'B'], [])
@@ -75,3 +90,14 @@ def test_set_string_empty_tape_left_left_right_a():
     tape.move_right()
     tape.set_content('a') 
     assert "(['B', 'a'])@1" == str(tape)
+    
+def test_replace_content():
+    tape = Tape('B', ['a', 'b', 'X', 'B'], [])
+    new_content = ['b', 'a']
+    tape.replace_content(new_content)
+    assert tape.content == new_content
+    assert tape.content is not new_content
+    
+    
+    
+    

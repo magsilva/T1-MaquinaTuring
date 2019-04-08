@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from turing_machine import turing_machine # representa a turing machine
-from tape import tape # representa uma unidade de fita
+from turing_machine import TuringMachine # representa a turing machine
+from tape import Tape # representa uma unidade de fita
+from transition import Transition
 import sys
 
 
@@ -21,29 +22,32 @@ if __name__ == "__main__":
     initial_state    = lines[4]
     final_states     = lines[5].split()
     number_of_tapes  = lines[6]
-    transitions      = []
-    
-    '''laco que pegara as transicoes'''
+    transitions_description  = []
     for i in range(7, number_of_lines):
-        transitions.append(lines[i].split())
+        transitions_description.append(lines[i])
 
-    tape_list = [] #lista de fitas
-    number_of_args = 2 + int(number_of_tapes)
-    '''laco de repeticao que construira a lista de fitas'''
-    for i in range(2, number_of_args):
-        if len(sys.argv) >= i + 1: # caso tenha simbolos, ele coloca na fita
-            tape_list.append(Tape(whitespace, tape_alphabet, list(sys.argv[i])))
-        else: # caso nao tenha, coloca simbolos que representam o branco
-            tape_list.append(Tape(whitespace,tape_alphabet,[whitespace]))
-
+    transitions = []
+    for description in transitions_description:
+        splited_description = description.split()
+        transition = Transition(splited_description[0], splited_description[1])
+        for tape_part in zip(*(splited_description[2:][i:] for i in range(3))):
+            transition.add_tape_part(tape_part[0], tape_part[1], tape_part[2])
+        transitions.append(transition)
+    
+    tapes = []
+    for i in range(2, 2 + int(number_of_tapes)):
+        tapes.append(Tape(whitespace, tape_alphabet, list(sys.argv[i])))
+    
     '''Instancia a turing machine'''
-    tm = turing_machine(states, final_states, initial_state, transitions, whitespace, tape_list)
+    tm = TuringMachine(states, initial_state, final_states, whitespace, transitions, tapes)
 
     '''executa a turing machine'''
     result = tm.run()
-    if result[0] == 1:
-        print("Aceitou")
+    if result == True:
+        if tm.get_decision() == "Accept":
+            print("Aceitou")
+        else:
+            print("Rejeitou")
     else:
-        print("Rejeitou")
-    print(result[1])
+        print("Never halted")
 

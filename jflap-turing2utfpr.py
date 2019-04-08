@@ -1,15 +1,12 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
 # Linha 1: alfabeto de entrada
 # Linha 2: alfabeto da fita
 # Linha 3: simbolo que representa um espaco em branco na fita
-# Linha 4: conjunto de estados
 # Linha 4: estado inicial
-# Linha 5: estados finais
+# Linha 5: conjunto de estados finais
 # Linha 6: quantidade de fitas
-# Linhas 7 em diante: transicoes, uma por linha, no formato: estado atual, novo estado, seguido de diversos 'simbolo atual, novo simbolo, direcao para mover a cabeca' para cada fita
+# Linhas 7 em diante: transicoes, uma por linha, no formato estado atual, novo estado e, para cada fita, o respectivo simbolo atual, novo simbolo, direcao para mover a cabeca
 
+from string import ascii_uppercase
 from xml.etree import ElementTree as ET
 import csv
 import sys
@@ -17,36 +14,68 @@ import sys
 class Transition(object):
 	def __init__(self):
 		self.currentState = None
-		self.currentTapeSymbol = None
 		self.newState = None
+		self.tapeMovements = []
+
+	def __lt__(self, other):
+		if self.currentState < other.currentState:
+			return True
+		elif self.currentState > other.currentState:
+			return False
+		elif self.newState < other.newState:
+			return True
+		elif self.newState > other.newState:
+			return False
+		else:
+			return self.newState < other.newState
+
+class TapeMovement(object):
+	def __init__(self):
+		self.tape = 1
+		self.currentTapeSymbol = None
 		self.newTapeSymbol = None
 		self.headDirection = None
 
+	def __lt__(self, other):
+		if self.currentTapeSymbol < other.currentTapeSymbol:
+			return True
+		elif self.currentTapeSymbol > other.currentTapeSymbol:
+			return False
+		elif self.newTapeSymbol < other.newTapeSymbol:
+			return True
+		elif self.newTapeSymbol > other.newTapeSymbol:
+			return False
+		else:
+			return self.headDirection < other.headDirection
 
 class Jflap2Utfpr(object):
 	def __init__(self):
 		self.alphabet = set()
 		self.states = set()
 		self.tapeSymbols = set()
+		self.tapes = 1
 		self.initialState = None
 		self.finalStates = set()
-                self.tapes = 1
 		self.transitions = set()
+		self.singleTape = False
 
 	def convert(self, inputFile, outputFile, blankSymbol = 'B', alphabet = None):
-		if alphabet is None:
-			self.alphabet = self.tapeSymbols
-		else:
-			self.alphabet = alphabet
-
-		self.blankSymbol = blankSymbol
-		self.tapeSymbols.add(blankSymbol)
-
 		xmldoc = ET.parse(inputFile)
 		root = xmldoc.getroot()
-		tm = root.find('automaton')
+		if root.find('tapes') == None:
+			self.singleTape = True
+			self.tapes = 1
+		else:
+			self.tapes = int(root.find('tapes').text)
 
-		for s in tm.findall('block'):
+		tm = root.find('automaton')
+		stateElementName = 'block'
+		if tm == None:  # Old JFLAP format
+			tm = root
+			stateElementName = 'state'
+
+		# Discover states
+		for s in tm.findall(stateElementName):
 			state = s.attrib['id']
 			self.states.add(state)
 			if s.find('initial') is not None:
@@ -54,36 +83,75 @@ class Jflap2Utfpr(object):
 			if s.find('final') is not None:
 				self.finalStates.add(state)
 
+		# Discover tape alphabet (and fix blank symbol if required)
+		for t in tm.findall('transition'):
+			tapeXPath = ''
+			for i in range(1, self.tapes + 1):
+				if not self.singleTape: # Workaround for handling single and multitape Turing machines
+					tapeXPath = "[@tape='" + str(i) + "']"
+				if t.find("read" + tapeXPath).text is not None:
+					self.tapeSymbols.add(t.find("read" + tapeXPath).text)
+				if t.find("write" + tapeXPath).text is not None:
+					self.tapeSymbols.add(t.find("write" + tapeXPath).text)
+		for s in self.tapeSymbols:
+			if s == blankSymbol:
+				oldBlankSymbol = blankSymbol
+				for c in ascii_uppercase:
+					if c not in self.tapeSymbols:
+						blankSymbol = c
+						break
+				print("Simbolo escolhida para representar branco (" + oldBlankSymbol + ") foi utilizado para outros fins na maquina. Simbolo para branco foi substituido por " + blankSymbol + ".")
+		self.blankSymbol = blankSymbol
+		self.tapeSymbols.add(self.blankSymbol)
+
 		for t in tm.findall('transition'):
 			transition = Transition()
 			self.transitions.add(transition)
 			transition.currentState = t.find('from').text
 			transition.newState = t.find('to').text
-			transition.headDirection = t.find('move').text
-			if t.find('read').text is not None:
-				transition.currentTapeSymbol = t.find('read').text
-				self.tapeSymbols.add(transition.currentTapeSymbol)
-			else:
-				transition.currentTapeSymbol = blankSymbol
-			if t.find('write').text is not None:
-				transition.newTapeSymbol = t.find('write').text
-				self.tapeSymbols.add(transition.newTapeSymbol)
-			else:
-				transition.newTapeSymbol = blankSymbol
+			tapeXPath = ''
+			for i in range(1, self.tapes + 1):
+				movement = TapeMovement()
+				transition.tapeMovements.append(movement)
+				movement.tape = i
+				if not self.singleTape: # Workaround for handling single and multitape Turing machines
+					tapeXPath = "[@tape='" + str(i) + "']"
+				if t.find("read" + tapeXPath).text is not None:
+					movement.currentTapeSymbol = t.find("read" + tapeXPath).text
+				else:
+					movement.currentTapeSymbol = self.blankSymbol
+				if t.find("write" + tapeXPath).text is not None:
+					movement.newTapeSymbol = t.find("write" + tapeXPath).text
+				else:
+					movement.newTapeSymbol = self.blankSymbol
+				movement.headDirection = t.find("move" + tapeXPath).text
+
+		if alphabet is None:
+			self.alphabet = self.tapeSymbols.copy()
+			self.alphabet.remove(self.blankSymbol)
+		else:
+			self.alphabet = alphabet
 		
-		with open(outputFile, 'wb') as csvfile:
-			writer = csv.writer(csvfile, delimiter=' ')
-			writer.writerow(list(self.alphabet))
-			writer.writerow(list(self.tapeSymbols))
+		with open(outputFile, 'w') as csvfile:
+			writer = csv.writer(csvfile, delimiter=' ', lineterminator='\n')
+			writer.writerow(sorted(self.alphabet))
+			writer.writerow(sorted(self.tapeSymbols))
 			writer.writerow([self.blankSymbol])
-			writer.writerow(list(self.states))
+			writer.writerow(sorted(self.states))
 			writer.writerow([self.initialState])
-			writer.writerow(list(self.finalStates))
+			writer.writerow(sorted(self.finalStates))
 			writer.writerow([self.tapes])
-			for t in self.transitions:
-				writer.writerow([t.currentState, t.newState, t.currentTapeSymbol, t.newTapeSymbol, t.headDirection])
-
-
+			for transition in sorted(self.transitions):
+				transitionDescription = []
+				transitionDescription.append(transition.currentState)
+				transitionDescription.append(transition.newState)
+				for i in range(1, self.tapes+1):
+					for movement in sorted(transition.tapeMovements):
+						if movement.tape == i:
+							transitionDescription.append(movement.currentTapeSymbol)
+							transitionDescription.append(movement.newTapeSymbol)
+							transitionDescription.append(movement.headDirection)
+				writer.writerow(transitionDescription)
 
 if __name__ == "__main__":
 	if len(sys.argv) != 3:

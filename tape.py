@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 '''@mod tape: móduloe que representa uma unidade de fita da turing machine'''
+from copy import deepcopy
+from __builtin__ import False
+
 class Tape:
     '''
         @const: construtor do módulo que representa a classe tape (fita)
@@ -26,6 +29,8 @@ class Tape:
             self.move_right()
         elif movement == 'S':
             pass
+        else:
+            raise ValueError("Invalid direction")
 
     '''
         @func move_left: tem por finalidade mover a posição da fita para a esquerda
@@ -65,6 +70,16 @@ class Tape:
             self.content.append(symbol)
         else:
             self.content[self.position] = symbol 
+
+    def replace_content(self, new_content):
+        self.content = deepcopy(new_content)
+
+    def __eq__(self, other):
+        if self.__class__ != other.__class__:
+            return False
+        
+        return self.content == other.content
+        
 
     def __str__(self):
         result = "(";
