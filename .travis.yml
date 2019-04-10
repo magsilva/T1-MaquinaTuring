@@ -1,0 +1,22 @@
+language: python
+python:
+    - "3.6"
+    - "pypy3.5"
+# command to install dependencies
+install:
+    - pip install -r requirements.txt
+    - pip install .
+# command to run tests
+script:
+    - py.test --cov-report term-missing --cov
+branches:
+  only:
+   - master
+# after_success:
+# - coveralls
+notifications:
+  email:
+    recipients:
+      - magsilva@gmail.com
+    on_success: always
+on_failure: always
