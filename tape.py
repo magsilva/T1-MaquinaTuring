@@ -3,7 +3,6 @@
 
 '''@mod tape: móduloe que representa uma unidade de fita da turing machine'''
 from copy import deepcopy
-from __builtin__ import False
 
 class Tape:
     '''

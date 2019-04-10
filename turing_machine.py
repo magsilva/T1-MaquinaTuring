@@ -3,7 +3,6 @@
 
 from instance  import Instance
 import copy
-from __builtin__ import True
 
 ''' @mod turing_machine: módulo que representa uma turing machine '''
 class TuringMachine:

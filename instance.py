@@ -3,9 +3,6 @@
 
 import copy
 from transition import Transition
-from __builtin__ import True, False
-
-
 
 ''' @mod instance: módulo que representa uma instância'''
 class Instance:

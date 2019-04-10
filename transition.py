@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __builtin__ import True, False, object
-
 class TransitionTapePart(object):
     def __init__(self, current_tape_symbol, new_tape_symbol, direction):
         self.current_tape_symbol = current_tape_symbol

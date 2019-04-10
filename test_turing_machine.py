@@ -3,7 +3,6 @@ import pytest
 from tape import Tape
 from transition import Transition
 from turing_machine import TuringMachine
-from __builtin__ import False, True
 
 class TestTuringMachine:
     def setup_method(self):

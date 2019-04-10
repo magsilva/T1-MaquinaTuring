@@ -2,8 +2,6 @@ import pytest
 
 from transition import Transition
 
-from __builtin__ import True
-
 def test_new_transition():
     transition = Transition('A', 'B')
     transition.add_tape_part('x', 'y', 'L')
