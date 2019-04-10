@@ -1,6 +1,6 @@
 import pytest
 
-from tape import Tape
+from turing.tape import Tape
 
 def test_get_content_of_non_empty_tape():
     tape = Tape('B', ['a', 'b', 'X', 'B'], ['a', 'b'])

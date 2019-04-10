@@ -1,8 +1,8 @@
 import pytest
 
-from tape import Tape
-from transition import Transition
-from turing_machine import TuringMachine
+from turing.tape import Tape
+from turing.transition import Transition
+from turing.turing_machine import TuringMachine
 
 class TestTuringMachine:
     def setup_method(self):

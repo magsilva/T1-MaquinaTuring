@@ -1,6 +1,6 @@
 import pytest
 
-from transition import Transition
+from turing.transition import Transition
 
 def test_new_transition():
     transition = Transition('A', 'B')
