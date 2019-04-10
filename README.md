@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/magsilva/T1-MaquinaTuring.svg?branch=master)](https://travis-ci.org/magsilva/T1-MaquinaTuring)
+
 Este programa simula a execução de uma máquina de Turing (MT). Por enquanto, são suportadas as seguintes características:
 * Determinismo e não determinismo
 * Uma ou mais fitas
