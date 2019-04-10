@@ -24,11 +24,11 @@ class TestTuringMachine:
         for description in transitions_description:
             splited_description = description.split()
             transition = Transition(splited_description[0], splited_description[1])
-            for tape_part in zip(*(splited_description[2:][i:] for i in range(3))):
+            for tape_part in zip(*(splited_description[2:][i::3] for i in range(3))):
                 transition.add_tape_part(tape_part[0], tape_part[1], tape_part[2])
             transitions.append(transition)
         tapes = [
-            Tape("B", ['a', 'b', 'c', 'B'], ['a', 'b', 'c']),
+            Tape("B", ['a', 'b', 'c', 'B'], []),
             Tape("B", ['a', 'B'], []),
             Tape("B", ['b', 'B'], []),
         ]

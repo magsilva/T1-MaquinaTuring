@@ -62,9 +62,9 @@ class TuringMachine:
             if configuration.acceptance_status == True:
                 return "Accept"
         
-        if len(self.current_configurations) == 0:
+        if len(self.current_configurations) == 0 or self.is_halted():
             return "Reject"
-        
+
         return "Undefined"
         
             

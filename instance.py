@@ -24,7 +24,7 @@ class Instance:
             return self
         
         if not self.is_transition_valid(transition):
-            return self
+            return None
         
         new_instance = Instance(transition.get_new_state(), self.tapes, self)
         for tape in zip(new_instance.tapes, transition.get_new_tape_data()):
