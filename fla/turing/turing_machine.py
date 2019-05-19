@@ -57,14 +57,18 @@ class TuringMachine:
         self.current_configurations = []
         for configuration in configurations_current_step:
             logging.debug(str(configuration))
-            valid_transitions = configuration.get_valid_transitions()
-            for transition in valid_transitions:
+            for transition in configuration.get_valid_transitions():
                 new_configuration = configuration.apply_transition(transition)
                 self.current_configurations.append(new_configuration)
                 logging.debug(str(configuration) + " -> " + str(new_configuration))
             
     def run(self):
         halted_configurations = []
+        for configuration in self.current_configurations:
+            self.verify_status(configuration)
+            if configuration.acceptance_status != None:
+                halted_configurations.append(configuration)
+            logging.debug(str(configuration) + " (" + str(configuration.acceptance_status) + ")")
         while self.current_configurations:
             self.step_forward()
             for configuration in self.current_configurations:

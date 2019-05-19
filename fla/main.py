@@ -4,6 +4,9 @@
 from dfa.dfa import DeterministicFiniteAutomaton
 from dfa.transition import Transition as DFATransition 
 
+from ndfa.ndfa import NonDeterministicFiniteAutomaton
+from ndfa.transition import Transition as NDFATransition 
+
 from turing.turing_machine import TuringMachine
 from turing.tape import Tape
 from turing.transition import Transition as TuringTransition
@@ -30,6 +33,27 @@ def dfa(lines, cmdline_args):
     else:
         print("Rejeitou")
 
+def ndfa(lines, cmdline_args):
+    input_alphabet    = lines[0].split()
+    whitespace        = lines[1]
+    states            = lines[2].split()
+    initial_states    = lines[3]
+    acceptance_states = lines[4].split()
+    transitions = []
+    for description in lines[5:]:
+        splited_description = description.split()
+        if splited_description[1] == whitespace:
+            splited_description[1] = None
+        transition = NDFATransition(splited_description[0], splited_description[1], splited_description[2])
+        transitions.append(transition)
+    ndfa = NonDeterministicFiniteAutomaton(states, initial_states, acceptance_states, transitions)
+    initial_configurations = ndfa.get_initial_configurations(cmdline_args[0])
+    ndfa.load_configurations(initial_configurations)
+    result = ndfa.run()
+    if ndfa.get_decision() == True:
+        print("Aceitou")
+    else:
+        print("Rejeitou")
 
 def turing_machine(lines, cmdline_args):
     input_alphabet   = lines[0].split()
@@ -75,5 +99,6 @@ if __name__ == "__main__":
         turing_machine(lines, sys.argv[2:])
     elif automaton_type == "DFA":
         dfa(lines, sys.argv[2:])
-
+    elif automaton_type == "NDFA":
+        ndfa(lines, sys.argv[2:])
 
