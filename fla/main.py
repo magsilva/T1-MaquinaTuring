@@ -7,6 +7,9 @@ from dfa.transition import Transition as DFATransition
 from ndfa.ndfa import NonDeterministicFiniteAutomaton
 from ndfa.transition import Transition as NDFATransition 
 
+from pda.pda import PushDownAutomaton
+from pda.transition import Transition as PDATransition 
+
 from turing.turing_machine import TuringMachine
 from turing.tape import Tape
 from turing.transition import Transition as TuringTransition
@@ -51,6 +54,34 @@ def ndfa(lines, cmdline_args):
     ndfa.load_configurations(initial_configurations)
     result = ndfa.run()
     if ndfa.get_decision() == True:
+        print("Aceitou")
+    else:
+        print("Rejeitou")
+
+def pda(lines, cmdline_args):
+    input_alphabet    = lines[0].split()
+    stack_alphabet    = lines[1].split()
+    whitespace        = lines[2]
+    initial_stack_symbol = lines[3]
+    states            = lines[4].split()
+    initial_state     = lines[5]
+    acceptance_states = lines[6].split()
+    transitions = []
+    for description in lines[7:]:
+        splited_description = description.split()
+        if splited_description[1] == whitespace:
+            splited_description[1] = None
+        if splited_description[2] == whitespace:
+            splited_description[2] = None
+        if splited_description[4] == whitespace:
+            splited_description[4] = None
+        transition = PDATransition(splited_description[0], splited_description[1], splited_description[2], splited_description[3], splited_description[4])
+        transitions.append(transition)
+    pda = PushDownAutomaton(states, initial_state, acceptance_states, initial_stack_symbol, transitions)
+    configurations = pda.get_initial_configurations(cmdline_args[0])
+    pda.load_configurations(configurations)
+    result = pda.run()
+    if pda.get_decision() == True:
         print("Aceitou")
     else:
         print("Rejeitou")
@@ -101,4 +132,6 @@ if __name__ == "__main__":
         dfa(lines, sys.argv[2:])
     elif automaton_type == "NDFA":
         ndfa(lines, sys.argv[2:])
+    elif automaton_type == "PDA":
+        pda(lines, sys.argv[2:])
 
