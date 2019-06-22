@@ -40,7 +40,7 @@ def ndfa(lines, cmdline_args):
     input_alphabet    = lines[0].split()
     whitespace        = lines[1]
     states            = lines[2].split()
-    initial_states    = lines[3]
+    initial_states    = lines[3].split()
     acceptance_states = lines[4].split()
     transitions = []
     for description in lines[5:]:
