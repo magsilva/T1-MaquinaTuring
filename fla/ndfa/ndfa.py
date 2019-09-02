@@ -63,7 +63,8 @@ class NonDeterministicFiniteAutomaton:
         for configuration in configurations_current_step:
             for transition in configuration.get_valid_transitions():
                 new_configuration = configuration.apply_transition(transition)
-                self.current_configurations.append(new_configuration)
+                if new_configuration is not None:
+                    self.current_configurations.append(new_configuration)
                 logging.debug(str(configuration) + " -> " + str(new_configuration))
 
     def run(self):
