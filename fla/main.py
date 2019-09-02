@@ -124,7 +124,7 @@ if __name__ == "__main__":
     lines = []
     for line in lines_cmd:
         lines.append(line.rstrip())
-    automaton_type = lines[0]
+    automaton_type = lines[0].replace(' ', '')
     lines = lines[1:]
     if automaton_type == "TM":
         turing_machine(lines, sys.argv[2:])
