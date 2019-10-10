@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from ndfa.instance import Instance
+from fla.ndfa.instance import Instance
+
 import copy
 import logging
 

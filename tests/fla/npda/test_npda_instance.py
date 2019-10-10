@@ -1,8 +1,8 @@
 import pytest
 
-from turing.instance import Instance
-from turing.tape import Tape
-from turing.transition import Transition
+from fla.turing.instance import Instance
+from fla.turing.tape import Tape
+from fla.turing.transition import Transition
 
 def test_new_instance():
     tape1 = Tape("B", ['a', 'b'], ['b', 'b'])

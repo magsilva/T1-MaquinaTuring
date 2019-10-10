@@ -1,8 +1,8 @@
 import pytest
 
-from turing.tape import Tape
-from turing.transition import Transition
-from turing.turing_machine import TuringMachine
+from fla.turing.tape import Tape
+from fla.turing.transition import Transition
+from fla.turing.turing_machine import TuringMachine
 
 class TestTuringMachine:
     def setup_method(self):
@@ -32,8 +32,9 @@ class TestTuringMachine:
             Tape("B", ['a', 'B'], []),
             Tape("B", ['b', 'B'], []),
         ]
-        self.tm = TuringMachine(states, 'q0', ['q3'], 'B', transitions, tapes)
-        
+        self.tm = TuringMachine(states, 'q0', ['q3'], 'B', transitions)
+        initial_configuration = self.tm.get_initial_configurations(tapes)
+        self.tm.load_configurations(initial_configuration)
     
     def test_new_turing(self):
         assert self.tm.is_halted() == False
