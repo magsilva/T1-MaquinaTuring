@@ -48,7 +48,7 @@ class TapeMovement(object):
 		else:
 			return self.headDirection < other.headDirection
 
-class Jflap2Utfpr(object):
+class JflapTmConverter(object):
 	def __init__(self):
 		self.alphabet = set()
 		self.states = set()
@@ -59,7 +59,7 @@ class Jflap2Utfpr(object):
 		self.transitions = set()
 		self.singleTape = False
 
-	def convert(self, inputFile, outputFile, blankSymbol = 'B', alphabet = None):
+	def convert(self, inputFile, outputFile = None, blankSymbol = 'B', alphabet = None):
 		xmldoc = ET.parse(inputFile)
 		root = xmldoc.getroot()
 		if root.find('tapes') == None:
@@ -131,8 +131,13 @@ class Jflap2Utfpr(object):
 			self.alphabet.remove(self.blankSymbol)
 		else:
 			self.alphabet = alphabet
-		
-		with open(outputFile, 'w') as csvfile:
+	
+		if outputFile == None:
+            csvfile = io.StringIO()
+        else
+            csvfile = open(outputFile, 'w')
+        
+		with csvfile:
 			writer = csv.writer(csvfile, delimiter=' ', lineterminator='\n')
 			writer.writerow("TM")
 			writer.writerow(sorted(self.alphabet))
@@ -154,10 +159,15 @@ class Jflap2Utfpr(object):
 							transitionDescription.append(movement.headDirection)
 				writer.writerow(transitionDescription)
 
+		if outputFile == None:
+            return csvfile.getvalue()
+
+
+
 if __name__ == "__main__":
 	if len(sys.argv) != 3:
 		print("Parametros insuficientes. Informe o nome de arquivo de entrada e o nome do arquivo de saida")
 		sys.exit(1)
-	converter = Jflap2Utfpr()
+	converter = JflapTmMConverter()
 	converter.convert(sys.argv[1], sys.argv[2])
 

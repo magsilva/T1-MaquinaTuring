@@ -31,7 +31,7 @@ class Transition(object):
 		if self.newStackTopSymbol != other.newStackTopSymbol:
 			return self.newStackTopSymbol < other.newStackTopSymbol
 
-class Jflap2Utfpr(object):
+class JflapPdaConverter(object):
 	def __init__(self):
 		self.state_id_to_name = {}
 		self.inputAlphabet = set()
@@ -43,7 +43,7 @@ class Jflap2Utfpr(object):
 		self.blankSymbol = "E"
 		self.stackInitialSymbol = "Z"
 
-	def convert(self, inputFile, outputFile, blankSymbol = "E", inputAlphabet = None, stackAlphabet = None, states = None):
+	def convert(self, inputFile, outputFile = None, blankSymbol = "E", inputAlphabet = None, stackAlphabet = None, states = None):
 		self.blankSymbol = blankSymbol
 		if inputAlphabet is not None:
 			self.inputAlphabet = inputAlphabet
@@ -117,8 +117,12 @@ class Jflap2Utfpr(object):
 				transition.newStackTopSymbol = self.blankSymbol
 
 		self.transitions.sort()
-		
-		with open(outputFile, 'w') as csvfile:
+
+        if outputFile == None:
+            csvfile = io.StringIO()
+        else
+            csvfile = open(outputFile, 'w')
+		with csvfile:
 			writer = csv.writer(csvfile, delimiter = ' ', escapechar = None, quotechar = None, quoting = csv.QUOTE_NONE, skipinitialspace = True)
 			writer.writerow("PDA")
 			writer.writerow(set2list(self.inputAlphabet))
@@ -131,6 +135,9 @@ class Jflap2Utfpr(object):
 			for t in self.transitions:
 				writer.writerow([t.currentState, t.currentWordSymbol, t.currentStackTopSymbol, t.newState, t.newStackTopSymbol])
 
+		if outputFile == None:
+            return csvfile.getvalue()
+
 
 def set2list(dataset):
 	sortedList = list(dataset)
@@ -142,6 +149,6 @@ if __name__ == "__main__":
 	if len(sys.argv) != 3:
 		print("Parametros insuficientes. Informe o nome de arquivo de entrada e o nome do arquivo de saida")
 		sys.exit(1)
-	converter = Jflap2Utfpr()
-	converter.convert(sys.argv[1], sys.argv[2], "E")
+	converter = JflapPdaConverter()
+	converter.convert(sys.argv[1], sys.argv[2])
 

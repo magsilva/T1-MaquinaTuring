@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 # Linha 1: alfabeto de entrada
 # Linha 2: simbolo a ser considerado para representar epsilon ou lambda (nao deve pertencer ao alfabeto de entrada)
 # Lista 3: conjunto de estados
@@ -8,7 +11,9 @@
 
 from xml.etree import ElementTree as ET
 import csv
+import io
 import sys
+
 
 def set2list(dataset):
 	sortedList = list(dataset)
@@ -30,7 +35,7 @@ class Transition(object):
 		return self.newState < other.newState 
 
 
-class Jflap2Utfpr(object):
+class JflapFaConverter(object):
 	def __init__(self):
 		self.state_id_to_name = {}
 		self.alphabet = set()
@@ -40,7 +45,7 @@ class Jflap2Utfpr(object):
 		self.transitions = []
 		self.blankSymbol = 'B'
 
-	def convert(self, inputFile, outputFile, blankSymbol = 'B', alphabet = None):
+	def convert(self, inputFile, outputFile = None, blankSymbol = 'B', alphabet = None):
 		self.blankSymbol = blankSymbol
 		if alphabet is not None:
 			self.alphabet = alphabet
@@ -83,7 +88,11 @@ class Jflap2Utfpr(object):
 				break
 			print("Simbolo originalmente escolhido para representar branco foi utilizado para outros fins no automato. Simbolo para branco foi substituido por " + self.blankSymbol + ".")
 
-		with open(outputFile, 'w') as csvfile:
+		if outputFile == None:
+			csvfile = io.StringIO()
+		else
+			csvfile = open(outputFile, 'w')
+		with csvfile:
 			writer = csv.writer(csvfile, delimiter = ' ', escapechar = None, quotechar = None, quoting = csv.QUOTE_NONE, skipinitialspace = True)
 			writer.writerow("NDFA")
 			writer.writerow(set2list(self.alphabet))
@@ -93,11 +102,14 @@ class Jflap2Utfpr(object):
 			writer.writerow(set2list(self.acceptanceStates))
 			for t in self.transitions:
 				writer.writerow([t.currentState, t.currentInputSymbol, t.newState])
+		if outputFile == None:
+			return csvfile.getvalue()
+
 
 if __name__ == "__main__":
 	if len(sys.argv) != 3:
 		print("Parametros insuficientes. Informe o nome de arquivo de entrada e o nome do arquivo de saida")
 		sys.exit(1)
-	converter = Jflap2Utfpr()
-	converter.convert(sys.argv[1], sys.argv[2], "B")
+	converter = JflapFaConverter()
+	converter.convert(sys.argv[1], sys.argv[2])
 
