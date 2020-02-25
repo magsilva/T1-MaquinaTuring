@@ -1,15 +1,32 @@
-# Linha 1: alfabeto de entrada
-# Linha 2: alfabeto da fita
-# Linha 3: simbolo que representa um espaco em branco na fita
-# Linha 4: estado inicial
-# Linha 5: conjunto de estados finais
-# Linha 6: quantidade de fitas
-# Linhas 7 em diante: transicoes, uma por linha, no formato estado atual, novo estado e, para cada fita, o respectivo simbolo atual, novo simbolo, direcao para mover a cabeca
+# -*- coding: utf-8 -*-
 
-from string import ascii_uppercase
-from xml.etree import ElementTree as ET
+# Copyright (c) 2019 Marco Aurélio Graciotto Silva
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import csv
+import logging
+import io
+from string import ascii_uppercase
 import sys
+from xml.etree import ElementTree
+
 
 class Transition(object):
 	def __init__(self):
@@ -59,8 +76,8 @@ class JflapTmConverter(object):
 		self.transitions = set()
 		self.singleTape = False
 
-	def convert(self, inputFile, outputFile = None, blankSymbol = 'B', alphabet = None):
-		xmldoc = ET.parse(inputFile)
+	def convert(self, inputFile, outputFile = None, blankSymbol = 'E', alphabet = None):
+		xmldoc = ElementTree.parse(inputFile)
 		root = xmldoc.getroot()
 		if root.find('tapes') == None:
 			self.singleTape = True
@@ -100,7 +117,7 @@ class JflapTmConverter(object):
 					if c not in self.tapeSymbols:
 						blankSymbol = c
 						break
-				print("Simbolo escolhida para representar branco (" + oldBlankSymbol + ") foi utilizado para outros fins na maquina. Simbolo para branco foi substituido por " + blankSymbol + ".")
+				logging.debug("Simbolo escolhida para representar branco (" + oldBlankSymbol + ") foi utilizado para outros fins na maquina. Simbolo para branco foi substituido por " + blankSymbol + ".")
 		self.blankSymbol = blankSymbol
 		self.tapeSymbols.add(self.blankSymbol)
 
@@ -132,11 +149,12 @@ class JflapTmConverter(object):
 		else:
 			self.alphabet = alphabet
 	
+		csvcontent = ""
 		if outputFile == None:
-            csvfile = io.StringIO()
-        else
-            csvfile = open(outputFile, 'w')
-        
+			csvfile = io.StringIO()
+		else:
+			csvfile = open(outputFile, 'w')
+		
 		with csvfile:
 			writer = csv.writer(csvfile, delimiter=' ', lineterminator='\n')
 			writer.writerow("TM")
@@ -158,16 +176,6 @@ class JflapTmConverter(object):
 							transitionDescription.append(movement.newTapeSymbol)
 							transitionDescription.append(movement.headDirection)
 				writer.writerow(transitionDescription)
-
-		if outputFile == None:
-            return csvfile.getvalue()
-
-
-
-if __name__ == "__main__":
-	if len(sys.argv) != 3:
-		print("Parametros insuficientes. Informe o nome de arquivo de entrada e o nome do arquivo de saida")
-		sys.exit(1)
-	converter = JflapTmMConverter()
-	converter.convert(sys.argv[1], sys.argv[2])
-
+			if outputFile == None:
+				csvcontent = csvfile.getvalue()
+		return csvcontent

@@ -1,15 +1,31 @@
-# Linha 1: alfabeto de entrada
-# Linha 2: alfabeto da pilha
-# Linha 3: simbolo que representa epsilon (padrão: E)
-# Linha 4: simbolo inicial da pilha (padrao: Z)
-# Lista 5: conjunto de estados
-# Linha 6: estado inicial
-# Linha 7: conjunto de estados de aceitacao
-# Linhas 8 em diante: transicoes, uma por linha, no formato estado atual, simbolo atual da palavra, simbolo do topo da pilha, novo estado, novos simbolos a serem empilhados (topo a esquerda, base a direita)
+# -*- coding: utf-8 -*-
 
-from xml.etree import ElementTree as ET
+# Copyright (c) 2019 Marco Aurélio Graciotto Silva
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import csv
+import logging
+import io
 import sys
+from xml.etree import ElementTree
+
 
 class Transition(object):
 	def __init__(self):
@@ -52,7 +68,7 @@ class JflapPdaConverter(object):
 		if states is not None:
 			self.states = states
 
-		xmldoc = ET.parse(inputFile)
+		xmldoc = ElementTree.parse(inputFile)
 		root = xmldoc.getroot()
 		tm = root.find('automaton')
 
@@ -94,7 +110,7 @@ class JflapPdaConverter(object):
 					if c not in fullAlphabet:
 						blankSymbol = c
 						break
-				print("Simbolo escolhida para representar branco (" + oldBlankSymbol + ") foi utilizado para outros fins no automato. Simbolo para branco foi substituido por " + blankSymbol + ".")
+				logging.debug("Simbolo escolhida para representar branco (" + oldBlankSymbol + ") foi utilizado para outros fins no automato. Simbolo para branco foi substituido por " + blankSymbol + ".")
 		self.blankSymbol = blankSymbol
 		
 		for t in tm.findall('transition'):
@@ -118,37 +134,23 @@ class JflapPdaConverter(object):
 
 		self.transitions.sort()
 
-        if outputFile == None:
-            csvfile = io.StringIO()
-        else
-            csvfile = open(outputFile, 'w')
+		csvcontent = ""
+		if outputFile == None:
+			csvfile = io.StringIO()
+		else:
+			csvfile = open(outputFile, 'w')
 		with csvfile:
 			writer = csv.writer(csvfile, delimiter = ' ', escapechar = None, quotechar = None, quoting = csv.QUOTE_NONE, skipinitialspace = True)
 			writer.writerow("PDA")
-			writer.writerow(set2list(self.inputAlphabet))
-			writer.writerow(set2list(self.stackAlphabet))
+			writer.writerow(sorted(self.inputAlphabet))
+			writer.writerow(sorted(self.stackAlphabet))
 			writer.writerow(self.blankSymbol)
 			writer.writerow(self.stackInitialSymbol)
-			writer.writerow(set2list(self.states))
-			writer.writerow(set2list(self.initialStates))
-			writer.writerow(set2list(self.acceptingStates))
+			writer.writerow(sorted(self.states))
+			writer.writerow(sorted(self.initialStates))
+			writer.writerow(sorted(self.acceptingStates))
 			for t in self.transitions:
 				writer.writerow([t.currentState, t.currentWordSymbol, t.currentStackTopSymbol, t.newState, t.newStackTopSymbol])
-
-		if outputFile == None:
-            return csvfile.getvalue()
-
-
-def set2list(dataset):
-	sortedList = list(dataset)
-	sortedList.sort()
-	return sortedList
-	
-
-if __name__ == "__main__":
-	if len(sys.argv) != 3:
-		print("Parametros insuficientes. Informe o nome de arquivo de entrada e o nome do arquivo de saida")
-		sys.exit(1)
-	converter = JflapPdaConverter()
-	converter.convert(sys.argv[1], sys.argv[2])
-
+			if outputFile == None:
+				csvcontent = csvfile.getvalue()
+		return csvcontent

@@ -1,24 +1,30 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
+#
+# Copyright (c) 2019 Marco Aurélio Graciotto Silva
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-# Linha 1: alfabeto de entrada
-# Linha 2: simbolo a ser considerado para representar epsilon ou lambda (nao deve pertencer ao alfabeto de entrada)
-# Lista 3: conjunto de estados
-# Linha 4: estado inicial
-# Linha 5: conjunto de estados de aceitacao
-# Linhas 6 em diante: transicoes, uma por linha, cada qual no seguinte formato: estado atual, simbolo do alfabeto de entrada ou epsilon, estado destino
-
-
-from xml.etree import ElementTree as ET
 import csv
+import logging
 import io
 import sys
-
-
-def set2list(dataset):
-	sortedList = list(dataset)
-	sortedList.sort()
-	return sortedList
+from xml.etree import ElementTree
 
 
 class Transition(object):
@@ -45,12 +51,12 @@ class JflapFaConverter(object):
 		self.transitions = []
 		self.blankSymbol = 'B'
 
-	def convert(self, inputFile, outputFile = None, blankSymbol = 'B', alphabet = None):
+	def convert(self, inputFile, outputFile = None, blankSymbol = 'E', alphabet = None):
 		self.blankSymbol = blankSymbol
 		if alphabet is not None:
 			self.alphabet = alphabet
 
-		xmldoc = ET.parse(inputFile)
+		xmldoc = ElementTree.parse(inputFile)
 		root = xmldoc.getroot()
 		tm = root.find('automaton')
 		if tm == None:  # Old JFLAP format
@@ -88,28 +94,21 @@ class JflapFaConverter(object):
 				break
 			print("Simbolo originalmente escolhido para representar branco foi utilizado para outros fins no automato. Simbolo para branco foi substituido por " + self.blankSymbol + ".")
 
+		csvcontent = ""
 		if outputFile == None:
 			csvfile = io.StringIO()
-		else
+		else:
 			csvfile = open(outputFile, 'w')
 		with csvfile:
 			writer = csv.writer(csvfile, delimiter = ' ', escapechar = None, quotechar = None, quoting = csv.QUOTE_NONE, skipinitialspace = True)
-			writer.writerow("NDFA")
-			writer.writerow(set2list(self.alphabet))
+			writer.writerow("NDFA") # TODO: Check if is DFA or NFA
+			writer.writerow(sorted(self.alphabet))
 			writer.writerow(self.blankSymbol)
-			writer.writerow(set2list(self.states))
-			writer.writerow(set2list(self.initialStates))
-			writer.writerow(set2list(self.acceptanceStates))
+			writer.writerow(sorted(self.states))
+			writer.writerow(sorted(self.initialStates))
+			writer.writerow(sorted(self.acceptanceStates))
 			for t in self.transitions:
 				writer.writerow([t.currentState, t.currentInputSymbol, t.newState])
-		if outputFile == None:
-			return csvfile.getvalue()
-
-
-if __name__ == "__main__":
-	if len(sys.argv) != 3:
-		print("Parametros insuficientes. Informe o nome de arquivo de entrada e o nome do arquivo de saida")
-		sys.exit(1)
-	converter = JflapFaConverter()
-	converter.convert(sys.argv[1], sys.argv[2])
-
+			if outputFile == None:
+				csvcontent = csvfile.getvalue()
+		return csvcontent
