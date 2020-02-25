@@ -27,15 +27,15 @@ class TestTuringMachine:
             for tape_part in zip(*(splited_description[2:][i::3] for i in range(3))):
                 transition.add_tape_part(tape_part[0], tape_part[1], tape_part[2])
             transitions.append(transition)
+        self.tm = TuringMachine(states, 'q0', ['q3'], 'B', transitions)
         tapes = [
             Tape("B", ['a', 'b', 'c', 'B'], []),
             Tape("B", ['a', 'B'], []),
             Tape("B", ['b', 'B'], []),
         ]
-        self.tm = TuringMachine(states, 'q0', ['q3'], 'B', transitions)
         initial_configuration = self.tm.get_initial_configurations(tapes)
         self.tm.load_configurations(initial_configuration)
-    
+
     def test_new_turing(self):
         assert self.tm.is_halted() == False
         assert self.tm.get_decision() == "Undefined"
@@ -57,8 +57,8 @@ class TestTuringMachine:
     def test_run_accept(self):
         tapes = [
             Tape("B", ['a', 'b', 'c', 'B'], ['a', 'b', 'c']),
-            Tape("B", ['a', 'B'], []),
-            Tape("B", ['b', 'B'], []),
+            Tape("B", ['a', 'B'], ['']),
+            Tape("B", ['b', 'B'], ['']),
         ]
         self.tm.restart(tapes)
         result = self.tm.run()
