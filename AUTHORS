@@ -1,0 +1,13 @@
+The first version of this application was created in 2017 by Paulo B. Costa and
+Venancius Michelan, under the MIT license. It was part of an assignment for the
+course on Formal Languages, Automata and Computability, from the Computer Science
+program from Federal University of Technology (UTFPR) at Campo Mourão, Paraná,
+Brazil. I was the professor for that course. The application supported only
+Turing machines at that time.
+
+In 2019, I forked the code to use as an example for my classes. After several
+development iterations, the application was completely rewritten. I added support
+for finite automaton and stack automaton, improved debugging support and general
+software design as a whole. I had kept the MIT license and, also, the authorship
+information and development history from Paulo and Venancius's version of the
+application.
