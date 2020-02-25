@@ -47,10 +47,10 @@ class TuringMachine:
     def get_decision(self):
         for configuration in self.current_configurations:
             if configuration.acceptance_status == True:
-                return "Accept"
+                return True
         if len(self.current_configurations) == 0 or self.is_halted():
-            return "Reject"
-        return "Undefined"
+            return False
+        return None
         
     def step_forward(self):
         configurations_current_step = copy.copy(self.current_configurations)
