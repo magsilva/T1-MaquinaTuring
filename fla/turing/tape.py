@@ -4,11 +4,14 @@
 from copy import deepcopy
 
 class Tape:
-    def __init__(self, whitespace, tape_alphabet, content=[]):
+    def __init__(self, whitespace, tape_alphabet, content = None):
         self.position = 0 # posicao atual da fita
         self.whitespace_symbol = whitespace
         self.alphabet = tape_alphabet
-        self.content = content
+        if content == None:
+            self.content = []
+        else:
+            self.content = content
 
     def move_head(self, movement):
         if movement == 'L': 
@@ -52,9 +55,7 @@ class Tape:
     def __eq__(self, other):
         if self.__class__ != other.__class__:
             return False
-        
         return self.content == other.content
-        
 
     def __str__(self):
         result = "(";
