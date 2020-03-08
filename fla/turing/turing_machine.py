@@ -76,11 +76,11 @@ class TuringMachine:
 		configurations_current_step = copy.copy(self.current_configurations)
 		self.current_configurations = []
 		for configuration in configurations_current_step:
-			logging.debug(str(configuration))
+			logging.debug("Evaluation transitions for configuration " + str(configuration))
 			for transition in configuration.get_valid_transitions():
 				new_configuration = configuration.apply_transition(transition)
 				self.current_configurations.append(new_configuration)
-				logging.debug(str(configuration) + " -> " + str(new_configuration))
+				logging.debug("\tApplying transition " + str(transition) + ": " + str(configuration) + " -> " + str(new_configuration))
 			
 	def run(self):
 		halted_configurations = []
@@ -88,14 +88,14 @@ class TuringMachine:
 			self.verify_status(configuration)
 			if configuration.acceptance_status != None:
 				halted_configurations.append(configuration)
-			logging.debug(str(configuration) + " (" + str(configuration.acceptance_status) + ")")
+			logging.debug("Verifying configuration status for " + str(configuration) + ": " + str(configuration.acceptance_status))
 		while self.current_configurations:
 			self.step_forward()
 			for configuration in self.current_configurations:
 				self.verify_status(configuration)
 				if configuration.acceptance_status != None:
 					halted_configurations.append(configuration)
-				logging.debug(str(configuration) + " (" + str(configuration.acceptance_status) + ")")
+				logging.debug("Created new configuration: " + str(configuration) + " (" + str(configuration.acceptance_status) + ")")
 		self.current_configurations = halted_configurations
 		if self.is_halted():
 			return True
