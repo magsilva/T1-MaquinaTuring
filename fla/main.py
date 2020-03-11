@@ -32,7 +32,7 @@ from fla.jflap2flarunner import Jflap2FlaRunner
 
 
 if __name__ == "__main__":
-	logging.basicConfig(format='%(message)s', level=logging.DEBUG)
+	logging.basicConfig(format='%(message)s', level=logging.ERROR)
 	inputfile = sys.argv[1]
 	fileextension = os.path.splitext(os.path.split(inputfile)[1])[1]
 	if fileextension == '.jff':
