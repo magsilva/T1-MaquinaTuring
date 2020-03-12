@@ -86,9 +86,11 @@ class JflapTmConverter(object):
 			self.tapes = int(root.find('tapes').text)
 
 		tm = root.find('automaton')
-		stateElementName = 'block'
 		if tm == None:  # Old JFLAP format
 			tm = root
+
+		stateElementName = 'block'
+		if tm.find(stateElementName) == None:
 			stateElementName = 'state'
 
 		# Discover states
