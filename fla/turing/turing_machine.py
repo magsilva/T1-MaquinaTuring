@@ -67,7 +67,7 @@ class TuringMachine:
 	def get_decision(self):
 		for configuration in self.current_configurations:
 			if configuration.acceptance_status == True:
-				logging.error(configuration.get_tapes_as_string())
+				print(configuration.get_tapes_as_string())
 				return True
 		if len(self.current_configurations) == 0 or self.is_halted():
 			return False
