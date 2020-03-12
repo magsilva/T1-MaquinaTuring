@@ -62,11 +62,13 @@ class Instance:
 	def get_tapes_as_string(self, symbol_separator = ''):
 		result = ""
 		for tape in self.tapes:
+			current_tape_string = ""
 			for value in tape.content:
-				result += value
-				result += symbol_separator
-			result = result.rstrip(symbol_separator)
-			result = result.strip(tape.whitespace_symbol)
+				current_tape_string += value
+				current_tape_string += symbol_separator
+			current_tape_stringt = result.rstrip(symbol_separator)
+			current_tape_string = current_tape_string.strip(tape.whitespace_symbol)
+			result += current_tape_string
 			result += "\n"
 		result = result.rstrip()
 		return result
